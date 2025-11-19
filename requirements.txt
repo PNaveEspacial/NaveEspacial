@@ -1,0 +1,36 @@
+# ============================================================================
+# requirements.txt
+# DEPENDENCIAS DEL PROYECTO SHOOTER (Arquitectura Funcional)
+# ============================================================================
+
+# Runtime (solo lo necesario para la cáscara imperativa)
+pygame==2.6.1
+
+# Testing (unidad del núcleo funcional)
+pytest==7.4.3
+# pytest-cov==5.0.0    # (opcional) reporte de cobertura
+
+# ============================================================================
+# NOTAS:
+# ============================================================================
+# NÚCLEO FUNCIONAL (carpeta: nucleo/)
+# - NO usa librerías externas (solo librería estándar de Python).
+# - Mantén funciones puras y estructuras inmutables.
+#
+# CÁSCARA IMPERATIVA (carpeta: cascara_imperativa/)
+# - Usa pygame para entrada, bucle de juego, render y audio.
+#
+# TESTING:
+# - pytest para pruebas del núcleo (p.ej., test_colisiones.py, test_rng.py, etc.)
+#
+# ============================================================================
+# INSTALACIÓN 
+# ============================================================================
+# Ejecuta en la raíz del proyecto:
+#   pip install -r requirements.txt
+#
+# (Opcional si algún día quieres aislar dependencias con venv)
+#   python -m venv venv
+#   venv\Scripts\activate        # Windows
+#   pip install -r requirements.txt
+# ============================================================================

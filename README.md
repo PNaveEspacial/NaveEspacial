@@ -1,5 +1,5 @@
 # shooter-pygame
-Juego de shooter en pygame 
+Juego de shooter nave espacial aplicando conceptos de programacion funcional
 
 
 ```

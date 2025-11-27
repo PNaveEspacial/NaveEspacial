@@ -1,6 +1,6 @@
 # shooter-pygame
 Juego de shooter en pygame 
-Estructura del Proyecto (adaptado a tu repositorio)
+
 
 ```
 NaveEspacial-Funcional/

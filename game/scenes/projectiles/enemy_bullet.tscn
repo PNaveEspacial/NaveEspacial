@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/projectiles/bullet.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/kenney_pixel_shmup/tiles_packed.png" id="2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ebullet"]
+atlas = ExtResource("2")
+region = Rect2(144, 0, 16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ebullet"]
+radius = 3.0
+
+[node name="EnemyBullet" type="Area2D"]
+collision_layer = 8
+collision_mask = 1
+script = ExtResource("1")
+lifetime_s = 2.5
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_ebullet")
+modulate = Color(1, 0.35, 0.3, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ebullet")

@@ -1,9 +1,10 @@
 extends GutTest
 
 ## Lints every .tscn under game/scenes/ for `text = "..."` properties and
-## asserts each one is either empty or an existing translation key. No
-## scenes exist yet (they land in S8+), so this passes vacuously until
-## then; it is re-run against every later scene slice.
+## asserts each one is either empty or an existing translation key. Scenes
+## with no Control nodes (S7's pooled projectiles, for example) have zero
+## `text` properties and pass with a `pass_test` note instead of a
+## zero-assertion no-op.
 
 const SCENES_DIR := "res://scenes"
 const CSV_PATH := "res://i18n/strings.csv"
@@ -58,6 +59,7 @@ func test_every_scene_text_property_traces_to_a_key():
 
 	var text_prop_regex := RegEx.new()
 	text_prop_regex.compile("text\\s*=\\s*\"([^\"]*)\"")
+	var checked := 0
 
 	for scene_path in tscn_files:
 		var file := FileAccess.open(scene_path, FileAccess.READ)
@@ -70,3 +72,12 @@ func test_every_scene_text_property_traces_to_a_key():
 			var literal: String = m.get_string(1)
 			var ok: bool = literal == "" or csv_keys.has(literal)
 			assert_true(ok, "%s has a hardcoded UI literal '%s' with no matching CSV key." % [scene_path, literal])
+			checked += 1
+
+	# Scenes may legitimately have zero `text = "..."` properties (for
+	# example S7's projectile scenes, which have no Control nodes at all).
+	# Assert on the scan itself so this never silently becomes a
+	# zero-assertion "risky" test once real UI scenes land in S12+.
+	assert_true(tscn_files.size() > 0, "expected at least one .tscn under res://scenes/")
+	if checked == 0:
+		pass_test("no text properties found in %d scene(s); nothing to flag" % tscn_files.size())

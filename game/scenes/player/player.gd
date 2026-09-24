@@ -10,10 +10,14 @@ extends CharacterBody2D
 ## manual bounding-box check: enemy bullets call [method take_damage]
 ## directly through their own [code]body_entered[/code] handler, and
 ## [member _hurtbox] polls overlapping enemy bodies for contact damage
-## every physics frame the player is not invulnerable. Enemy scenes
-## (landing in S10) are expected to implement [code]get_contact_damage()
-## -> float[/code]; this duck-types the same way [code]bullet.gd[/code]
-## duck-types [code]take_damage[/code].
+## every physics frame the player is not invulnerable. [Enemy] implements
+## [code]get_contact_damage() -> float[/code]; this duck-types the same
+## way [code]bullet.gd[/code] duck-types [code]take_damage[/code].
+##
+## XP pickup is the same pattern: [member _pickup_magnet] polls overlapping
+## [code]pickup[/code]-layer areas every physics frame and calls [method
+## Node.has_method]-guarded [code]collect()[/code] on each -- [XpOrb]
+## implements it.
 
 signal died
 
@@ -29,6 +33,8 @@ var bullet_pool: NodePool = null
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _hurtbox: Area2D = $Hurtbox
+@onready var _pickup_magnet: Area2D = $PickupMagnet
+@onready var _pickup_magnet_shape: CircleShape2D = $PickupMagnet/CollisionShape2D.shape
 
 var _fire_cadence := FireCadence.new()
 var _hp: float = 0.0
@@ -51,6 +57,7 @@ func _physics_process(delta: float) -> void:
 	_aim()
 	_tick_invulnerability(delta)
 	_tick_contact_damage()
+	_tick_pickup_magnet()
 	_fire(delta)
 
 
@@ -130,6 +137,18 @@ func _tick_contact_damage() -> void:
 		if body.has_method("get_contact_damage"):
 			take_damage(body.get_contact_damage())
 			return
+
+
+## Keeps the magnet's radius in sync with the live [constant
+## StatBlock.Stat.PICKUP_RADIUS] (an upgrade can change it mid-run) and
+## collects every pickup currently inside it (design D11's layer-based
+## rule: [code]XpOrb.collect()[/code] is duck-typed the same way [code]
+## Enemy.get_contact_damage()[/code] is).
+func _tick_pickup_magnet() -> void:
+	_pickup_magnet_shape.radius = RunState.stats.value(StatBlock.Stat.PICKUP_RADIUS)
+	for area in _pickup_magnet.get_overlapping_areas():
+		if area.has_method("collect"):
+			area.collect()
 
 
 func _fire(delta: float) -> void:

@@ -73,11 +73,13 @@ func add_xp(amount: int) -> void:
 		EventBus.level_up_ready.emit(pending_level_ups)
 
 
-## Ends the run and emits [signal EventBus.run_ended]. Best-score
-## persistence lands with S13's SaveStore; until then this reports the
-## current score as both the run score and an unpersisted "best".
+## Ends the run: submits [member score] to [SaveStore] (design D17/D18)
+## and emits [signal EventBus.run_ended] with the persisted best and
+## whether this run set a new one. The only caller is [GameOver], after
+## its death-delay fx window (design D18's flow).
 func end_run() -> void:
-	EventBus.run_ended.emit(score, score, true)
+	var is_new_best := SaveStore.submit_score(score)
+	EventBus.run_ended.emit(score, SaveStore.best_score, is_new_best)
 
 
 func _make_stat_block() -> StatBlock:

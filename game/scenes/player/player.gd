@@ -1,23 +1,84 @@
+class_name Player
 extends CharacterBody2D
-## Twin-stick player ship, movement and aim (design D4, D5; player-ship
-## spec capability). Movement is free-arena WASD, clamped to the arena
-## bounds. Aim targets the mouse cursor exactly; only the ship sprite's
+## Twin-stick player ship (design D4, D5, D12; player-ship spec
+## capability). Movement is free-arena WASD, clamped to the arena bounds.
+## Aim/fire target the mouse cursor exactly; only the ship sprite's
 ## rotation is quantized to 16 directions (design D4) -- bullets fly at
-## the unquantized angle once firing lands.
+## the unquantized angle.
 ##
-## Firing, health/i-frames, and death extend this same file in this
-## slice's second work unit (S8.T3-T4), rather than replacing it.
+## Damage comes from two sources, both layer-based (design D11), never a
+## manual bounding-box check: enemy bullets call [method take_damage]
+## directly through their own [code]body_entered[/code] handler, and
+## [member _hurtbox] polls overlapping enemy bodies for contact damage
+## every physics frame the player is not invulnerable. Enemy scenes
+## (landing in S10) are expected to implement [code]get_contact_damage()
+## -> float[/code]; this duck-types the same way [code]bullet.gd[/code]
+## duck-types [code]take_damage[/code].
+
+signal died
 
 const _ARENA_MARGIN := 8.0
 const _ARENA_RECT := Rect2(0.0, 0.0, 640.0, 360.0)
 const _AIM_DIRECTIONS := 16.0
+const _MULTISHOT_SPREAD_DEG := 10.0
+const _BLINK_INTERVAL_S := 0.08
+
+## Set by the owning scene (design D10's pool contract: acquire/activate
+## stay the caller's responsibility, not a NodePath auto-wire).
+var bullet_pool: NodePool = null
 
 @onready var _sprite: Sprite2D = $Sprite2D
+@onready var _hurtbox: Area2D = $Hurtbox
+
+var _fire_cadence := FireCadence.new()
+var _hp: float = 0.0
+var _max_hp: float = 0.0
+var _invuln_time_left: float = 0.0
+var _blink_time: float = 0.0
+var _dead: bool = false
+
+
+func _ready() -> void:
+	_max_hp = RunState.stats.value(StatBlock.Stat.MAX_HP)
+	_hp = _max_hp
+	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
 
 
 func _physics_process(delta: float) -> void:
+	if _dead:
+		return
 	_move(delta)
 	_aim()
+	_tick_invulnerability(delta)
+	_tick_contact_damage()
+	_fire(delta)
+
+
+func get_hp() -> float:
+	return _hp
+
+
+func is_dead() -> bool:
+	return _dead
+
+
+## Enemy bullets and, later, boss attacks call this directly (design
+## D11's layer-based damage rule).
+func take_damage(amount: float) -> void:
+	if _dead or _invuln_time_left > 0.0:
+		return
+	_hp = max(_hp - amount, 0.0)
+	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
+	if _hp <= 0.0:
+		_die()
+	else:
+		_invuln_time_left = RunState.base_stats.invuln_s
+
+
+## Grants [param seconds] of invulnerability without a damage event (used
+## when resuming from the level-up screen once S12 lands).
+func grant_invulnerability(seconds: float) -> void:
+	_invuln_time_left = max(_invuln_time_left, seconds)
 
 
 func _move(_delta: float) -> void:
@@ -47,3 +108,62 @@ func _aim() -> void:
 	var angle := _aim_direction().angle()
 	var step := TAU / _AIM_DIRECTIONS
 	_sprite.rotation = snapped(angle, step) + PI / 2.0
+
+
+func _tick_invulnerability(delta: float) -> void:
+	if _invuln_time_left <= 0.0:
+		_sprite.visible = true
+		return
+	_invuln_time_left -= delta
+	_blink_time += delta
+	if _blink_time >= _BLINK_INTERVAL_S:
+		_blink_time = 0.0
+		_sprite.visible = not _sprite.visible
+	if _invuln_time_left <= 0.0:
+		_sprite.visible = true
+
+
+func _tick_contact_damage() -> void:
+	if _invuln_time_left > 0.0:
+		return
+	for body in _hurtbox.get_overlapping_bodies():
+		if body.has_method("get_contact_damage"):
+			take_damage(body.get_contact_damage())
+			return
+
+
+func _fire(delta: float) -> void:
+	var held := Input.is_action_pressed("fire")
+	var shots_per_second: float = RunState.stats.value(StatBlock.Stat.FIRE_RATE)
+	var shots := _fire_cadence.tick(delta, held, shots_per_second)
+	if shots <= 0 or bullet_pool == null:
+		return
+	var base_angle := _aim_direction().angle()
+	var count: int = max(1, RunState.stats.value_int(StatBlock.Stat.PROJECTILE_COUNT))
+	var speed: float = RunState.stats.value(StatBlock.Stat.BULLET_SPEED)
+	var damage: float = RunState.stats.value(StatBlock.Stat.DAMAGE)
+	for i in range(shots):
+		_spawn_fan(base_angle, count, speed, damage)
+
+
+func _spawn_fan(base_angle: float, count: int, speed: float, damage: float) -> void:
+	var spread := deg_to_rad(_MULTISHOT_SPREAD_DEG)
+	var start := -spread * float(count - 1) / 2.0
+	for i in range(count):
+		var angle := base_angle + start + spread * i
+		var bullet: Node = bullet_pool.acquire()
+		if bullet == null:
+			return
+		bullet.activate({
+			"position": global_position,
+			"direction": Vector2.RIGHT.rotated(angle),
+			"speed": speed,
+			"damage": damage,
+		})
+
+
+func _die() -> void:
+	_dead = true
+	velocity = Vector2.ZERO
+	died.emit()
+	EventBus.player_died.emit()

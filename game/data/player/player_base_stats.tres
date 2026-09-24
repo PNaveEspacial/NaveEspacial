@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PlayerBaseStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/player_base_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+max_hp = 5.0
+move_speed = 140.0
+fire_rate = 4.0
+damage = 1.0
+projectile_count = 1.0
+bullet_speed = 420.0
+pickup_radius = 28.0
+invuln_s = 1.0
+resume_invuln_s = 0.5

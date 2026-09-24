@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/pause_menu.gd" id="1"]
+[ext_resource type="Theme" path="res://scenes/ui/theme/pixel_theme.tres" id="2"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 30
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("2")
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+text = "PAUSE_TITLE"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/VBox"]
+text = "PAUSE_RESUME"
+
+[node name="MenuButton" type="Button" parent="CenterContainer/VBox"]
+text = "PAUSE_MENU"

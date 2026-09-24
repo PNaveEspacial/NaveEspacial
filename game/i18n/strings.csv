@@ -1,0 +1,28 @@
+keys,en,es
+MENU_TITLE,NaveEspacial,NaveEspacial
+MENU_PLAY,Play,Jugar
+MENU_SETTINGS,Settings,Ajustes
+MENU_QUIT,Quit,Salir
+SETTINGS_TITLE,Settings,Ajustes
+SETTINGS_LANGUAGE,Language,Idioma
+SETTINGS_BACK,Back,Volver
+HUD_LEVEL,Lv,Nv
+HUD_SCORE,Score,Puntos
+HUD_WAVE,Wave,Oleada
+PAUSE_TITLE,Paused,Pausa
+PAUSE_RESUME,Resume,Reanudar
+PAUSE_MENU,Menu,Menú
+LEVELUP_TITLE,Level Up!,¡Subiste de nivel!
+LEVELUP_CHOOSE,Choose an upgrade,Elige una mejora
+GAMEOVER_TITLE,Game Over,Fin de la partida
+GAMEOVER_SCORE,Score,Puntuación
+GAMEOVER_SEED,Seed,Semilla
+GAMEOVER_BEST,Best,Récord
+GAMEOVER_NEW_BEST,New Best!,¡Nuevo récord!
+GAMEOVER_RETRY,Retry,Reintentar
+GAMEOVER_MENU,Menu,Menú
+WAVE_LABEL,Wave {n},Oleada {n}
+LANG_ES,Español,Español
+LANG_EN,English,English
+COMMON_YES,Yes,Sí
+COMMON_NO,No,No

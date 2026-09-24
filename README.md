@@ -86,3 +86,15 @@ CÁSCARA IMPERATIVA
    │ Actualiza HUD
    ▼
 PANTALLA
+```
+
+## Godot rebuild (current project)
+
+`game/` is the current, actively developed project: a pixel-art, infinite
+wave-based roguelite rebuild of this shooter, in Godot 4.7.2. `nucleo/`,
+`cascara_imperativa/`, `assets/`, and `test_nucleo_core.py` are the legacy
+Pygame reference implementation. They stay in place and stay runnable; they
+are not modified by the Godot rebuild.
+
+Install and test commands land in a later commit, once the GUT test tooling
+is installed under `game/tools/`.

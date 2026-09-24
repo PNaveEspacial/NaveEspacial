@@ -48,6 +48,7 @@ func _ready() -> void:
 	_max_hp = RunState.stats.value(StatBlock.Stat.MAX_HP)
 	_hp = _max_hp
 	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
+	EventBus.stats_changed.connect(_on_stats_changed)
 
 
 func _physics_process(delta: float) -> void:
@@ -83,9 +84,29 @@ func take_damage(amount: float) -> void:
 
 
 ## Grants [param seconds] of invulnerability without a damage event (used
-## when resuming from the level-up screen once S12 lands).
+## when resuming from the level-up screen, design D14's level-up flow).
 func grant_invulnerability(seconds: float) -> void:
 	_invuln_time_left = max(_invuln_time_left, seconds)
+
+
+## Restores [param amount] HP, clamped to the current max (an upgrade's
+## [code]heal_amount[/code], design D14). A no-op while dead.
+func heal(amount: float) -> void:
+	if _dead:
+		return
+	_hp = min(_hp + amount, _max_hp)
+	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
+
+
+## An upgrade may change [constant StatBlock.Stat.MAX_HP]; every other
+## stat is already read live each frame ([method _fire], [method _move],
+## [method _tick_pickup_magnet]), but [member _max_hp] is cached, so it
+## needs an explicit refresh on [signal EventBus.stats_changed] (design
+## D14: "apply_upgrade -> StatBlock/heal/score -> stats_changed ->
+## Player/HUD").
+func _on_stats_changed() -> void:
+	_max_hp = RunState.stats.value(StatBlock.Stat.MAX_HP)
+	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
 
 
 func _move(_delta: float) -> void:

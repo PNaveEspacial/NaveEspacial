@@ -96,5 +96,41 @@ wave-based roguelite rebuild of this shooter, in Godot 4.7.2. `nucleo/`,
 Pygame reference implementation. They stay in place and stay runnable; they
 are not modified by the Godot rebuild.
 
-Install and test commands land in a later commit, once the GUT test tooling
-is installed under `game/tools/`.
+### GUT test tooling
+
+The GUT (Godot Unit Test) addon is installed by a pinned, checksum-verified
+script rather than committed to the repository, so it never needs to be
+tracked or updated manually.
+
+Install (from the `game/` directory):
+
+```powershell
+tools\install_gut.ps1
+```
+
+```bash
+tools/install_gut.sh
+```
+
+Both scripts download the pinned GUT release, verify its SHA-256 against the
+value pinned in the script, and fail closed (no partial install, non-zero
+exit) on a checksum mismatch. Pass `-Force` (PowerShell) or `--force` (bash)
+to reinstall.
+
+Run the full headless test suite:
+
+```powershell
+tools\run_tests.ps1
+```
+
+```bash
+tools/run_tests.sh
+```
+
+Both scripts resolve the Godot binary from the `GODOT_BIN` environment
+variable, falling back to the pinned default install path. Any extra
+argument is forwarded to the GUT CLI, so a focused run looks like:
+
+```powershell
+tools\run_tests.ps1 -gdir=res://tests/unit/core
+```

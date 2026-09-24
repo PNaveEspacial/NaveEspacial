@@ -1,0 +1,75 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="NaveEspacial"
+run/main_scene="res://scenes/menus/main_menu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+
+[display]
+
+; S1.T1 OQ3 finding: display/window/stretch/scale_mode is a confirmed key on
+; Godot 4.7.2 (hint_string "fractional,integer"). "integer" is a valid value.
+window/size/viewport_width=480
+window/size/viewport_height=270
+window/size/window_width_override=1440
+window/size/window_height_override=810
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+window/stretch/scale_mode="integer"
+
+[internationalization]
+
+locale/fallback="en"
+
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="enemy"
+2d_physics/layer_3="player_bullet"
+2d_physics/layer_4="enemy_bullet"
+2d_physics/layer_5="pickup"
+
+[physics]
+
+; S1.T1 OQ3 finding: physics/common/physics_interpolation is a confirmed key
+; on Godot 4.7.2, and Node.physics_interpolation_mode is a confirmed property
+; on the base Node class (available to Node2D and its descendants).
+common/physics_ticks_per_second=60
+common/physics_interpolation=true
+
+[rendering]
+
+; S1.T1 OQ3 finding: rendering/renderer/rendering_method accepts
+; "gl_compatibility" (hint_string "forward_plus,mobile,gl_compatibility") on
+; Godot 4.7.2. GPUParticles2D.class_exists() and instantiates successfully
+; under headless mode; class-level support in Compatibility is confirmed by
+; ClassDB, full particle-rendering fidelity is confirmed manually in S16.
+; CollisionObject2D.disable_mode is a confirmed property with enum values
+; DISABLE_MODE_REMOVE (0, default), DISABLE_MODE_MAKE_STATIC (1),
+; DISABLE_MODE_KEEP_ACTIVE (2) -- design D10's REMOVE-mode assumption holds.
+; A canvas_item fragment shader with `COLOR = texture(TEXTURE, UV);` compiles
+; without error, confirming D15's fragment COLOR semantics.
+; Viewport.get_mouse_position() is a confirmed method on Viewport; its
+; stretched-coordinate behavior needs a live window and is confirmed manually
+; in S8 per design D5.
+; --import as a headless CLI flag is confirmed: `--headless --path <dir>
+; --import` builds .godot/imported/ from a real asset (icon.svg) with exit 0.
+textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

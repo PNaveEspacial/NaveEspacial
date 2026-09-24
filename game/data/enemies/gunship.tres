@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/defs/enemy_data.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/kenney_pixel_shmup/ships_packed.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"gunship"
+behavior = 1
+cost = 2.0
+spawn_weight = 0.6
+unlock_wave = 3
+base_hp = 5.0
+move_speed = 50.0
+accel = 200.0
+contact_damage = 1.0
+score_value = 25
+xp_value = 12
+texture = ExtResource("2")
+frame = 12
+hurt_radius = 14.0
+spawn_grace_s = 0.75
+range_min = 100.0
+range_max = 180.0
+fire_interval_s = 1.6
+telegraph_s = 0.25
+bullet_speed = 240.0
+bullet_damage = 1.0

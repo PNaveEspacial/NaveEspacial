@@ -1,7 +1,8 @@
 extends Node2D
-## Run scene (S11 scope): starts a run, wires the player to its bullet
-## pool, drives enemy spawning through [WaveDirector], and spawns an
-## [XpOrb] on every [signal EventBus.enemy_killed]. HUD, pause, and
+## Run scene (S12 scope): starts a run, wires the player to its bullet
+## pool, drives enemy spawning through [WaveDirector], spawns an [XpOrb]
+## on every [signal EventBus.enemy_killed], and gives [LevelUpScreen] the
+## player reference it needs to heal/grant i-frames. HUD, pause, and
 ## game-over all land in a later slice (S14).
 
 @onready var _player: Player = $World/Player
@@ -10,6 +11,7 @@ extends Node2D
 @onready var _enemy_bullet_pool: NodePool = $Pools/EnemyBulletPool
 @onready var _xp_orb_pool: NodePool = $Pools/XpOrbPool
 @onready var _wave_director: WaveDirector = $WaveDirector
+@onready var _level_up_screen: LevelUpScreen = $LevelUpScreen
 
 
 func _ready() -> void:
@@ -24,6 +26,8 @@ func _ready() -> void:
 	_wave_director.start(RunState.rng)
 
 	EventBus.enemy_killed.connect(_on_enemy_killed)
+
+	_level_up_screen.set_player(_player)
 
 
 func _on_player_died() -> void:

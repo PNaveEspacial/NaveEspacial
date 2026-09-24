@@ -1,0 +1,47 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/level_up_screen.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/upgrade_card.tscn" id="2"]
+[ext_resource type="Resource" path="res://data/upgrades/fire_rate.tres" id="3"]
+[ext_resource type="Resource" path="res://data/upgrades/damage.tres" id="4"]
+[ext_resource type="Resource" path="res://data/upgrades/move_speed.tres" id="5"]
+[ext_resource type="Resource" path="res://data/upgrades/max_hp.tres" id="6"]
+[ext_resource type="Resource" path="res://data/upgrades/multishot.tres" id="7"]
+[ext_resource type="Resource" path="res://data/upgrades/pickup_radius.tres" id="8"]
+[ext_resource type="Resource" path="res://data/upgrades/repair.tres" id="9"]
+[ext_resource type="Resource" path="res://data/upgrades/salvage.tres" id="10"]
+[ext_resource type="Resource" path="res://data/upgrades/overclock.tres" id="11"]
+
+[node name="LevelUpScreen" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1")
+pool = [ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11")]
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
+text = "LEVELUP_TITLE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox"]
+text = "LEVELUP_CHOOSE"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="CenterContainer/VBox"]
+alignment = 1
+
+[node name="Card1" parent="CenterContainer/VBox/HBox" instance=ExtResource("2")]
+
+[node name="Card2" parent="CenterContainer/VBox/HBox" instance=ExtResource("2")]
+
+[node name="Card3" parent="CenterContainer/VBox/HBox" instance=ExtResource("2")]

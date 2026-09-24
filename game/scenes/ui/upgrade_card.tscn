@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/upgrade_card.gd" id="1"]
+
+[node name="UpgradeCard" type="Button"]
+custom_minimum_size = Vector2(180, 110)
+text = ""
+autowrap_mode = 3
+script = ExtResource("1")

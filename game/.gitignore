@@ -1,0 +1,10 @@
+# Godot-generated cache and import artifacts.
+.godot/
+
+# GUT is installed by game/tools/install_gut.ps1 / install_gut.sh; it is
+# never committed.
+addons/gut/
+addons/.gut-tmp/
+
+# Editor/OS scratch files.
+*.tmp

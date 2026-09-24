@@ -34,12 +34,14 @@ is only true of the `tiles_packed.png` sheet (16x16, 120 tiles). The
 most likely draw from per design D13's `EnemyData.texture`/`frame` fields —
 is actually **32x32 px per tile, 24 tiles**, not 16x16. This is a real
 discrepancy from the design's stated assumption, verified directly against
-the downloaded archive. It does not change any S1-S3 setting (the 480x270
-internal resolution and pixel pipeline settings from D2/D3 are unaffected
-by this slice), but it means a 32x32 ship sprite covers roughly twice the
-relative screen height a 16x16 sprite would at 480x270 (about 11.9% of the
-viewport height instead of the assumed 5.9%). This should be re-evaluated
-before S8/S9 pick actual ship frames — either by using a sub-region of the
-32x32 tiles, scaling sprites down on import, or accepting the larger
-relative size. Recorded in `sdd/godot-roguelite-rebuild/apply-progress` for
-the executor of those slices.
+the downloaded archive.
+
+**S4 update**: design D2 states its own rule for this exact case ("if ships
+are 32x32, switch to 640x360"). As the first commit of slice S4, the
+internal resolution changed from 480x270 to **640x360** in
+`game/project.godot` (window override raised to 1920x1080, keeping the
+integer x3 default). `SpawnRing`'s `min_player_distance` (S5) scales
+proportionally from 120 px to 160 px for the same reason. This keeps a
+32x32 ship sprite at roughly the same relative screen height the design
+originally assumed for a 16x16 sprite at 480x270 (~11.9% either way), so no
+further re-evaluation is needed before S8/S9 pick actual ship frames.

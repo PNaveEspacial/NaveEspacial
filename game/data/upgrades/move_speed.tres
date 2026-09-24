@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://data/defs/upgrade_data.gd" id="1"]
+[ext_resource type="Script" path="res://data/defs/stat_modifier.gd" id="2"]
+
+[sub_resource type="Resource" script_class="StatModifier" id="StatModifier_move_speed"]
+script = ExtResource("2")
+stat = 1
+op = 1
+value = 0.1
+
+[resource]
+script = ExtResource("1")
+id = &"move_speed"
+name_key = &"UPG_MOVE_SPEED_NAME"
+desc_key = &"UPG_MOVE_SPEED_DESC"
+weight = 1.0
+max_stacks = 4
+modifiers = Array[Resource]([SubResource("StatModifier_move_speed")])
+heal_amount = 0
+score_bonus_per_level = 0

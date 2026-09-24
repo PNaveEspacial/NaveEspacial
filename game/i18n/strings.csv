@@ -26,3 +26,21 @@ LANG_ES,Español,Español
 LANG_EN,English,English
 COMMON_YES,Yes,Sí
 COMMON_NO,No,No
+UPG_FIRE_RATE_NAME,Fire Rate,
+UPG_FIRE_RATE_DESC,+15% fire rate,
+UPG_DAMAGE_NAME,Damage,
+UPG_DAMAGE_DESC,+20% damage,
+UPG_MOVE_SPEED_NAME,Move Speed,
+UPG_MOVE_SPEED_DESC,+10% move speed,
+UPG_MAX_HP_NAME,Max HP,
+UPG_MAX_HP_DESC,+1 max HP and heals 1,
+UPG_MULTISHOT_NAME,Multishot,
+UPG_MULTISHOT_DESC,+1 projectile,
+UPG_PICKUP_RADIUS_NAME,Pickup Radius,
+UPG_PICKUP_RADIUS_DESC,+25% pickup radius,
+UPG_REPAIR_NAME,Repair,
+UPG_REPAIR_DESC,Heals 2 HP,
+UPG_SALVAGE_NAME,Salvage,
+UPG_SALVAGE_DESC,Instant score bonus,
+UPG_OVERCLOCK_NAME,Overclock,
+UPG_OVERCLOCK_DESC,+5% damage per stack,

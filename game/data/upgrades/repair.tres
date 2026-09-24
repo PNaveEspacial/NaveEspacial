@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/upgrade_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"repair"
+name_key = &"UPG_REPAIR_NAME"
+desc_key = &"UPG_REPAIR_DESC"
+weight = 0.5
+max_stacks = 0
+modifiers = Array[Resource]([])
+heal_amount = 2
+score_bonus_per_level = 0

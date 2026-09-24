@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DifficultyParams" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/defs/difficulty_params.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+budget_base = 10.0
+budget_growth = 4.0
+budget_exponent = 1.15
+max_alive_base = 8
+max_alive_per_wave = 2
+max_alive_cap = 48
+hp_growth = 0.12
+speed_growth = 0.02
+speed_cap = 1.6
+duration_base = 20.0
+duration_per_wave = 1.5
+duration_cap = 60.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scenes/game/game.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2"]
@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" path="res://scenes/projectiles/player_bullet.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/enemy_bullet.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="7"]
+[ext_resource type="Script" path="res://scenes/waves/wave_director.gd" id="8"]
+[ext_resource type="Resource" path="res://data/enemies/drone.tres" id="9"]
+[ext_resource type="Resource" path="res://data/enemies/gunship.tres" id="10"]
+[ext_resource type="Resource" path="res://data/difficulty/default_difficulty.tres" id="11"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1")
@@ -49,5 +53,10 @@ scene = ExtResource("7")
 container_path = NodePath("../../World/Enemies")
 prewarm = 16
 max_size = 48
+
+[node name="WaveDirector" type="Node" parent="."]
+script = ExtResource("8")
+roster = [ExtResource("9"), ExtResource("10")]
+difficulty_params = ExtResource("11")
 
 [node name="Crosshair" parent="." instance=ExtResource("3")]

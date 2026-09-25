@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://fx/damage_number.gd" id="1"]
+[ext_resource type="Theme" path="res://scenes/ui/theme/pixel_theme.tres" id="2"]
+
+[node name="DamageNumber" type="Label"]
+theme = ExtResource("2")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1")

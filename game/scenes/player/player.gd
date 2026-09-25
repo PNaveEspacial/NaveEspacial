@@ -77,6 +77,9 @@ func take_damage(amount: float) -> void:
 		return
 	_hp = max(_hp - amount, 0.0)
 	EventBus.player_health_changed.emit(int(round(_hp)), int(round(_max_hp)))
+	EventBus.damage_dealt.emit(global_position, amount)
+	HitFlash.flash(_sprite)
+	EventBus.shake_requested.emit(0.5)
 	if _hp <= 0.0:
 		_die()
 	else:
@@ -170,6 +173,7 @@ func _tick_pickup_magnet() -> void:
 	for area in _pickup_magnet.get_overlapping_areas():
 		if area.has_method("collect"):
 			area.collect()
+			Squash.pulse(_sprite, Vector2(1.15, 1.15), 0.12)
 
 
 func _fire(delta: float) -> void:
@@ -178,6 +182,7 @@ func _fire(delta: float) -> void:
 	var shots := _fire_cadence.tick(delta, held, shots_per_second)
 	if shots <= 0 or bullet_pool == null:
 		return
+	Squash.pulse(_sprite, Vector2(0.85, 1.15), 0.06)
 	var base_angle := _aim_direction().angle()
 	var count: int = max(1, RunState.stats.value_int(StatBlock.Stat.PROJECTILE_COUNT))
 	var speed: float = RunState.stats.value(StatBlock.Stat.BULLET_SPEED)
@@ -205,5 +210,6 @@ func _spawn_fan(base_angle: float, count: int, speed: float, damage: float) -> v
 func _die() -> void:
 	_dead = true
 	velocity = Vector2.ZERO
+	EventBus.shake_requested.emit(1.0)
 	died.emit()
 	EventBus.player_died.emit()

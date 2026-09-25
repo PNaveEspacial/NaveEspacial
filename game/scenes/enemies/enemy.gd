@@ -24,6 +24,7 @@ signal despawn_requested
 const _ATLAS_FRAME_SIZE := 32
 const _ATLAS_COLUMNS := 4
 const _ARENA_RECT := Rect2(0.0, 0.0, 640.0, 360.0)
+const _DEATH_DISSOLVE_S := 0.25
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _collision_shape: CollisionShape2D = $CollisionShape2D
@@ -81,11 +82,14 @@ func activate(params: Dictionary) -> void:
 
 	global_position = params.get("position", Vector2.ZERO)
 	_update_visual()
+	_reset_fx()
 
 	process_mode = Node.PROCESS_MODE_INHERIT
 	visible = true
+	_collision_shape.disabled = false
 	_active = true
 	reset_physics_interpolation()
+	Squash.pulse(_sprite, Vector2(0.6, 0.6), 0.15)
 
 
 func deactivate() -> void:
@@ -107,8 +111,12 @@ func take_damage(amount: float) -> void:
 	if not _active:
 		return
 	_hp -= amount
+	EventBus.damage_dealt.emit(global_position, amount)
+	HitFlash.flash(_sprite)
 	if _hp <= 0.0:
 		_die()
+	else:
+		Squash.pulse(_sprite, Vector2(1.2, 0.8), 0.08)
 
 
 func _update_visual() -> void:
@@ -170,8 +178,39 @@ func _fire_bullet() -> void:
 	})
 
 
+## Death plays a dissolve animation (design D15) before releasing back to
+## the pool: the collision shape is disabled immediately (deferred, so a
+## still-in-progress physics callback never mutates it mid-frame), but
+## [signal despawn_requested] -- and therefore the pool release -- waits
+## for the dissolve tween, so a dying enemy keeps occupying its pool slot
+## for [constant _DEATH_DISSOLVE_S] while it visibly erodes.
 func _die() -> void:
 	_active = false
 	RunState.add_score(data.score_value)
 	EventBus.enemy_killed.emit(data.id, global_position, data.score_value, data.xp_value)
-	despawn_requested.emit()
+	EventBus.shake_requested.emit(0.15)
+	_collision_shape.set_deferred("disabled", true)
+
+	var material := _sprite.material as ShaderMaterial
+	if material == null:
+		despawn_requested.emit()
+		return
+	var tween := create_tween()
+	tween.tween_method(
+		func(value: float) -> void: material.set_shader_parameter("dissolve", value),
+		0.0,
+		1.0,
+		_DEATH_DISSOLVE_S
+	)
+	tween.tween_callback(despawn_requested.emit)
+
+
+## Every pooled reuse must start fully visible and undissolved (design
+## D15's dissolve state must not leak from a prior death into the next
+## spawn of the same pooled instance).
+func _reset_fx() -> void:
+	var material := _sprite.material as ShaderMaterial
+	if material == null:
+		return
+	material.set_shader_parameter("dissolve", 0.0)
+	material.set_shader_parameter("flash_amount", 0.0)

@@ -60,6 +60,12 @@ func release(node: Node) -> void:
 	_available.append(node)
 
 
+## Instances currently acquired and not yet released (S16's debug
+## overlay: per-pool usage).
+func get_active_count() -> int:
+	return _spawned_count - _available.size()
+
+
 func _create() -> Node:
 	var node: Node = scene.instantiate()
 	_container.add_child(node)

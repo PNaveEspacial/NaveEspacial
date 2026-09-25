@@ -57,3 +57,44 @@ func test_no_empty_english_cell():
 		var key: String = rows[i][0]
 		var en: String = rows[i][1] if rows[i].size() > 1 else ""
 		assert_ne(en, "", "Key '%s' should have a non-empty English value." % key)
+
+
+## S15 extension: missing-fallback behavior (design D16). Uses synthetic,
+## in-memory [Translation] resources rather than real gaps in
+## strings.csv, since S15.T9 fills every remaining Spanish cell -- this
+## keeps the fallback contract tested even once the real CSV has no more
+## naturally occurring holes to exercise it against.
+var _added_translations: Array[Translation] = []
+var _previous_locale: String = ""
+
+
+func before_each():
+	_previous_locale = TranslationServer.get_locale()
+
+
+func after_each():
+	for translation in _added_translations:
+		TranslationServer.remove_translation(translation)
+	_added_translations.clear()
+	TranslationServer.set_locale(_previous_locale)
+
+
+func _add_translation(locale: String, messages: Dictionary) -> void:
+	var translation := Translation.new()
+	translation.locale = locale
+	for key in messages:
+		translation.add_message(key, messages[key])
+	TranslationServer.add_translation(translation)
+	_added_translations.append(translation)
+
+
+func test_key_present_in_english_but_missing_in_spanish_falls_back_to_english():
+	_add_translation("en", {"TEST_MISSING_FALLBACK_KEY": "English Only Value"})
+	_add_translation("es", {})
+	TranslationServer.set_locale("es")
+	assert_eq(tr("TEST_MISSING_FALLBACK_KEY"), "English Only Value")
+
+
+func test_key_absent_from_both_columns_returns_the_key_itself():
+	TranslationServer.set_locale("es")
+	assert_eq(tr("TEST_TOTALLY_UNKNOWN_KEY"), "TEST_TOTALLY_UNKNOWN_KEY", "a key missing from every translation should never render blank")

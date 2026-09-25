@@ -26,21 +26,21 @@ LANG_ES,Español,Español
 LANG_EN,English,English
 COMMON_YES,Yes,Sí
 COMMON_NO,No,No
-UPG_FIRE_RATE_NAME,Fire Rate,
-UPG_FIRE_RATE_DESC,+15% fire rate,
-UPG_DAMAGE_NAME,Damage,
-UPG_DAMAGE_DESC,+20% damage,
-UPG_MOVE_SPEED_NAME,Move Speed,
-UPG_MOVE_SPEED_DESC,+10% move speed,
-UPG_MAX_HP_NAME,Max HP,
-UPG_MAX_HP_DESC,+1 max HP and heals 1,
-UPG_MULTISHOT_NAME,Multishot,
-UPG_MULTISHOT_DESC,+1 projectile,
-UPG_PICKUP_RADIUS_NAME,Pickup Radius,
-UPG_PICKUP_RADIUS_DESC,+25% pickup radius,
-UPG_REPAIR_NAME,Repair,
-UPG_REPAIR_DESC,Heals 2 HP,
-UPG_SALVAGE_NAME,Salvage,
-UPG_SALVAGE_DESC,Instant score bonus,
-UPG_OVERCLOCK_NAME,Overclock,
-UPG_OVERCLOCK_DESC,+5% damage per stack,
+UPG_FIRE_RATE_NAME,Fire Rate,Cadencia de disparo
+UPG_FIRE_RATE_DESC,+15% fire rate,+15% cadencia de disparo
+UPG_DAMAGE_NAME,Damage,Daño
+UPG_DAMAGE_DESC,+20% damage,+20% daño
+UPG_MOVE_SPEED_NAME,Move Speed,Velocidad
+UPG_MOVE_SPEED_DESC,+10% move speed,+10% velocidad
+UPG_MAX_HP_NAME,Max HP,Vida máxima
+UPG_MAX_HP_DESC,+1 max HP and heals 1,+1 vida máxima y cura 1
+UPG_MULTISHOT_NAME,Multishot,Disparo múltiple
+UPG_MULTISHOT_DESC,+1 projectile,+1 proyectil
+UPG_PICKUP_RADIUS_NAME,Pickup Radius,Radio de recogida
+UPG_PICKUP_RADIUS_DESC,+25% pickup radius,+25% radio de recogida
+UPG_REPAIR_NAME,Repair,Reparar
+UPG_REPAIR_DESC,Heals 2 HP,Cura 2 de vida
+UPG_SALVAGE_NAME,Salvage,Saqueo
+UPG_SALVAGE_DESC,Instant score bonus,Bono de puntuación instantáneo
+UPG_OVERCLOCK_NAME,Overclock,Sobrecarga
+UPG_OVERCLOCK_DESC,+5% damage per stack,+5% daño por nivel

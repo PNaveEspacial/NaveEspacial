@@ -2,15 +2,15 @@ class_name MainMenu
 extends Control
 ## The project's main scene (design D18; game-flow-ui spec capability).
 ## Play starts a fresh seeded run and switches to [code]game.tscn[/code];
-## Settings toggles an embedded panel (populated with the language
-## selector in S15); Quit exits. Design D5: the OS mouse cursor is
+## Settings toggles an embedded panel instancing [SettingsMenu] (S15's
+## language selector); Quit exits. Design D5: the OS mouse cursor is
 ## visible here, unlike the confined/hidden crosshair mode gameplay uses.
 
 @onready var _play_button: Button = $CenterContainer/VBox/PlayButton
 @onready var _settings_button: Button = $CenterContainer/VBox/SettingsButton
 @onready var _quit_button: Button = $CenterContainer/VBox/QuitButton
 @onready var _settings_panel: Control = $SettingsPanel
-@onready var _settings_back_button: Button = $SettingsPanel/CenterContainer/VBox/BackButton
+@onready var _settings_menu: SettingsMenu = $SettingsPanel/CenterContainer/SettingsMenu
 
 
 func _ready() -> void:
@@ -19,7 +19,7 @@ func _ready() -> void:
 	_play_button.pressed.connect(_on_play_pressed)
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
-	_settings_back_button.pressed.connect(_on_settings_back_pressed)
+	_settings_menu.back_pressed.connect(_on_settings_back_pressed)
 
 
 func _on_play_pressed() -> void:

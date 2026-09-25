@@ -169,6 +169,11 @@ func _on_enemy_despawned(enemy: Node) -> void:
 	_alive_enemies.erase(enemy)
 
 
+## S16's debug overlay: the current alive-enemy count.
+func get_alive_enemy_count() -> int:
+	return _alive_enemies.size()
+
+
 func _wave_cleared_or_timed_out() -> bool:
 	if _spawned_groups.has(false):
 		return false

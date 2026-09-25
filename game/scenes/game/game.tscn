@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://scenes/game/game.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2"]
@@ -16,14 +16,32 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="14"]
 [ext_resource type="PackedScene" path="res://scenes/menus/pause_menu.tscn" id="15"]
 [ext_resource type="PackedScene" path="res://scenes/menus/game_over.tscn" id="16"]
+[ext_resource type="Shader" path="res://fx/shaders/starfield.gdshader" id="17"]
+[ext_resource type="Script" path="res://fx/screen_shake.gd" id="18"]
+[ext_resource type="PackedScene" path="res://fx/burst.tscn" id="19"]
+[ext_resource type="PackedScene" path="res://fx/damage_number.tscn" id="20"]
+[ext_resource type="PackedScene" path="res://scenes/debug/debug_overlay.tscn" id="21"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_starfield"]
+shader = ExtResource("17")
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="Starfield" type="ColorRect" parent="Background"]
+material = SubResource("ShaderMaterial_starfield")
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 0)
 anchor_mode = 0
 enabled = true
+script = ExtResource("18")
 
 [node name="World" type="Node2D" parent="."]
 
@@ -34,6 +52,8 @@ enabled = true
 [node name="EnemyBullets" type="Node2D" parent="World"]
 
 [node name="Pickups" type="Node2D" parent="World"]
+
+[node name="Fx" type="Node2D" parent="World"]
 
 [node name="Player" parent="World" instance=ExtResource("2")]
 position = Vector2(320, 180)
@@ -68,6 +88,20 @@ container_path = NodePath("../../World/Pickups")
 prewarm = 64
 max_size = 200
 
+[node name="BurstPool" type="Node" parent="Pools"]
+script = ExtResource("4")
+scene = ExtResource("19")
+container_path = NodePath("../../World/Fx")
+prewarm = 16
+max_size = 32
+
+[node name="DamageNumberPool" type="Node" parent="Pools"]
+script = ExtResource("4")
+scene = ExtResource("20")
+container_path = NodePath("../../World/Fx")
+prewarm = 24
+max_size = 48
+
 [node name="WaveDirector" type="Node" parent="."]
 script = ExtResource("8")
 roster = [ExtResource("9"), ExtResource("10")]
@@ -82,3 +116,5 @@ difficulty_params = ExtResource("11")
 [node name="PauseMenu" parent="." instance=ExtResource("15")]
 
 [node name="GameOver" parent="." instance=ExtResource("16")]
+
+[node name="DebugOverlay" parent="." instance=ExtResource("21")]

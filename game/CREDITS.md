@@ -45,3 +45,44 @@ proportionally from 120 px to 160 px for the same reason. This keeps a
 32x32 ship sprite at roughly the same relative screen height the design
 originally assumed for a 16x16 sprite at 480x270 (~11.9% either way), so no
 further re-evaluation is needed before S8/S9 pick actual ship frames.
+
+## Press Start 2P (pixel UI font)
+
+- **Name**: Press Start 2P
+- **Author**: Cody "CodeMan38" Boisclair (The Press Start 2P Project
+  Authors)
+- **License**: SIL Open Font License, Version 1.1 (OFL-1.1) —
+  https://openfontlicense.org/documents/OFL.txt (full text also committed
+  at `game/assets/fonts/press_start_2p/OFL.txt`)
+- **Source**: Google Fonts' canonical font repository (the upstream,
+  actively-maintained mirror of this font family) —
+  https://github.com/google/fonts/tree/main/ofl/pressstart2p
+- **Direct download URL**: https://raw.githubusercontent.com/google/fonts/main/ofl/pressstart2p/PressStart2P-Regular.ttf
+- **Downloaded**: 2026-09-24
+- **File SHA-256**: `034c77f1f05ec89421e4a63f0e3a4ca1ecf852cc6d2bf611f126f275728e017`
+- **Files committed**: `game/assets/fonts/press_start_2p/PressStart2P-Regular.ttf`
+  and `game/assets/fonts/press_start_2p/OFL.txt`.
+
+**Design D6 correction**: the design's primary choice was **monogram** by
+datagoblin (CC0 1.0, `datagoblin.itch.io/monogram`), with Press Start 2P
+named as the explicit fallback. At S15 apply time, itch.io's free-asset
+download is a JS-driven claim flow (a "No thanks, just take me to the
+downloads" button that POSTs to an endpoint derived from obfuscated
+client-side script state, not a stable REST URL) that could not be
+scripted headlessly within this slice's scope. Per design D6's own
+documented fallback rule, this slice uses **Press Start 2P** instead.
+Its glyph coverage for the full requirement set — every character in
+`game/i18n/strings.csv` plus `áéíóúüñÁÉÍÓÚÜÑ¿¡` — was verified directly
+against the downloaded file with `Font.has_char()` before committing (see
+`game/tests/integration/test_font_glyphs.gd`), and via a one-off headless
+probe run against the real Godot 4.7.2 binary during apply: zero missing
+characters.
+
+**Import settings** (`game/assets/fonts/press_start_2p/PressStart2P-Regular.ttf.import`,
+per design D6): antialiasing None (`antialiasing=0`), hinting None
+(`hinting=0`), subpixel positioning Disabled (`subpixel_positioning=0`),
+no mipmaps (`generate_mipmaps=false`), no MSDF
+(`multichannel_signed_distance_field=false`). `game/scenes/ui/theme/pixel_theme.tres`
+uses it at `default_font_size = 8` — Press Start 2P's own native pixel
+grid is 8x8, matching design D6's "native pixel size or integer
+multiples" rule.
